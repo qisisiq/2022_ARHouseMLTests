@@ -14,7 +14,7 @@ namespace Dynamite3D.RealIvy
 			rtIvyGrowth.Init(rtIvyContainer, ivyParameters, gameObject, leavesMeshesByChosenLeaf, 
 				GetMaxNumPoints(), GetMaxNumLeaves(), GetMaxNumVerticesPerLeaf());
 
-			for (int i = 0; i < 10; i++)
+			for (int i = 0; i < 3; i++)
 			{
 				rtIvyGrowth.Step();
 			}

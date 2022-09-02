@@ -17,6 +17,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using CMF;
+using Dynamite3D.RealIvy;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -38,6 +39,12 @@ namespace MagicLeap.Examples
     /// </summary>
     public class IvyMeshing : MonoBehaviour
     {
+        private static IvyMeshing _instance;
+        public static IvyMeshing Instance
+        {
+            get { return _instance; }
+        }
+        
         [SerializeField, Tooltip("The spatial mapper from which to update mesh params.")]
         private MeshingSubsystemComponent _meshingSubsystemComponent = null;
 
@@ -106,12 +113,24 @@ namespace MagicLeap.Examples
 
         [SerializeField, Tooltip("Minimum plane area to treat as a valid plane")]
         private float minPlaneArea = 0.25f;
+        
+        // Ivy area-------------
+        
+        public IvyCaster ivyCaster;
+
 
         /// <summary>
         /// Initializes component data and starts MLInput.
         /// </summary>
         void Awake()
         {
+            if (_instance != null && _instance != this)
+            {
+                Destroy(this.gameObject);
+            } else {
+                _instance = this;
+            }
+
             _meshingVisualizer.SetRenderers(_renderMode);
 
             permissionCallbacks.OnPermissionDenied += OnPermissionDenied;
@@ -317,8 +336,6 @@ namespace MagicLeap.Examples
                 Instantiate(_ballPrefab, hit.point, Quaternion.identity);
                 Debug.Log("trigger hit point: " + hit.point);
             }
-            
-            ShootBall();
             ShootSeed();
         }
 
@@ -341,8 +358,12 @@ namespace MagicLeap.Examples
             rigidBody.velocity = Vector3.zero;
             rigidBody.angularVelocity = Vector3.zero;
             rigidBody.AddForce(_controller.gameObject.transform.forward * SHOOTING_FORCE);
+            
+        }
 
-
+        public void CastIvy(Vector3 pos, Quaternion rot)
+        {
+            ivyCaster.CastRandomIvy(pos, rot);
         }
         void ShootBall()
         {
