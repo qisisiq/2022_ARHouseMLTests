@@ -1516,9 +1516,10 @@ MonoBehaviour:
   _ballPrefab: {fileID: 1768872223544792, guid: 0b46e96b48f596a4abe7013197e2fe8f,
     type: 3}
   _controllerObject: {fileID: 1312689090}
-  _renderMode: 0
+  _renderMode: 1
   _boundedExtentsSize: {x: 2, y: 2, z: 2}
   _boundlessExtentsSize: {x: 10, y: 10, z: 10}
+  keerPrefab: {fileID: 0}
   maxResults: 100
   minHoleLength: 0.5
   minPlaneArea: 0.25

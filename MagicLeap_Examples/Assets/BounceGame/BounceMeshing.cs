@@ -69,7 +69,7 @@ namespace MagicLeap.Examples
         private GameObject _controllerObject = null;
 
         [SerializeField, Space, Tooltip("Render mode to render mesh data with.")]
-        private MeshingVisualizer.RenderMode _renderMode = MeshingVisualizer.RenderMode.None;
+        private MeshingVisualizer.RenderMode _renderMode = MeshingVisualizer.RenderMode.Wireframe;
         private int _renderModeCount;
 
         [SerializeField, Space, Tooltip("Size of the bounds extents when bounded setting is enabled.")]
@@ -122,6 +122,9 @@ namespace MagicLeap.Examples
 
         [SerializeField]
         private float throwForce = 300f;
+        [SerializeField]
+        private float ballForce = 300f;
+
 
         [SerializeField, Space, Tooltip("Controller rigidbody")]
         private Rigidbody _controllerRigidbody;
@@ -131,10 +134,13 @@ namespace MagicLeap.Examples
 
         [SerializeField, Space, Tooltip("Current bounces")]
         private TMP_Text highScoreBouncesText;
-
+        
         [HideInInspector] public int NumBounces;
         [HideInInspector] public int HighScoreBounces;
         
+        [SerializeField]
+        private TMP_Text highScoreCelebrationText;
+
         private int _currentFrameIndex = 0;
         
         // number of velocity frames to track 
@@ -342,7 +348,7 @@ namespace MagicLeap.Examples
         /// <param name="callbackContext"></param>
         private void OnBumperDown(InputAction.CallbackContext callbackContext)
         {
-            ResetBall();
+            ShootCube();
         }
 
         /// <summary>
@@ -436,6 +442,7 @@ namespace MagicLeap.Examples
                 if (NumBounces > HighScoreBounces)
                 {
                     HighScoreBounces = NumBounces;
+                    StartCoroutine(ScaleUpAndDown(highScoreCelebrationText, new Vector3(2f, 2f, 2f), 1f));
                 }
 
                 NumBounces = 0;
@@ -451,7 +458,30 @@ namespace MagicLeap.Examples
 
         }
         
-        void ShootBall()
+        IEnumerator ScaleUpAndDown(TMP_Text tmpText, Vector3 upScale, float duration)
+        {
+            tmpText.gameObject.SetActive(true);
+            var origText = tmpText.text;
+            tmpText.text += HighScoreBounces.ToString();
+            
+            var objectTransform = tmpText.transform;
+            Vector3 initialScale = objectTransform.localScale;
+ 
+            for(float time = 0 ; time < duration ; time += Time.deltaTime)
+            {
+                float progress = Mathf.PingPong(time, duration) / duration;
+                objectTransform.localScale = Vector3.Lerp(initialScale, upScale, progress);
+                yield return null;
+            }
+            objectTransform.localScale = initialScale;
+            
+            tmpText.text = origText;
+            tmpText.gameObject.SetActive(false);
+
+
+        }
+        
+        void ShootCube()
         {
             // TODO: Use pool object instead of instantiating new object on each trigger down.
             // Create the ball and necessary components and shoot it along raycast.
@@ -469,8 +499,6 @@ namespace MagicLeap.Examples
 
             ballCounter++;
             
-            float ballsize = Random.Range(MIN_BALL_SIZE, MAX_BALL_SIZE);
-            ball.transform.localScale = new Vector3(ballsize, ballsize, ballsize);
             ball.transform.position = _controller.gameObject.transform.position;
 
 
@@ -482,7 +510,7 @@ namespace MagicLeap.Examples
 
             rigidBody.velocity = Vector3.zero;
             rigidBody.angularVelocity = Vector3.zero;
-            rigidBody.AddForce(_controller.gameObject.transform.forward * SHOOTING_FORCE);
+            rigidBody.AddForce(_controller.gameObject.transform.forward * ballForce);
         }
 
         /// <summary>

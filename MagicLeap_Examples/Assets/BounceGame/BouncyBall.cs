@@ -23,8 +23,9 @@ public class BouncyBall : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        if (Vector3.Distance(BounceMeshing.Instance.PreviousBallPos, transform.position)
-            > BounceMeshing.Instance.MinDistanceBetweenBounce)
+        var overallDistance = Vector3.Distance(BounceMeshing.Instance.PreviousBallPos, transform.position)
+                              > BounceMeshing.Instance.MinDistanceBetweenBounce;
+        if (overallDistance)
         {
             BounceMeshing.Instance.NumBounces++;
             BounceMeshing.Instance.UpdateText();
