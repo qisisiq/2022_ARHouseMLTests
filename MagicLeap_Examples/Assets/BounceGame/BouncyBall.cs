@@ -8,7 +8,7 @@ public class BouncyBall : MonoBehaviour
 {
     private AudioSource _audioSource;
 
-    public ParticleSystem _particleSystem;
+    public ParticleSystem _particleSystemPrefab;
     // Start is called before the first frame update
     void Start()
     {
@@ -30,7 +30,11 @@ public class BouncyBall : MonoBehaviour
             BounceMeshing.Instance.NumBounces++;
             BounceMeshing.Instance.UpdateText();
             _audioSource.PlayOneShot(_audioSource.clip);
-            _particleSystem.Play();
+
+            var ps = Instantiate(_particleSystemPrefab);
+            ps.transform.position = other.contacts[0].point;
+            ps.transform.localRotation = Quaternion.FromToRotation(Vector3.up, other.contacts[0].normal);
+            ps.Play();
 
         }
         BounceMeshing.Instance.PreviousBallPos = transform.position;

@@ -152,6 +152,8 @@ namespace MagicLeap.Examples
         [HideInInspector] public Vector3 PreviousBallPos;
         [SerializeField] private float minDistanceBetweenBounce = 0.03f; // how far away for it to count as a legit bounce 
         public float MinDistanceBetweenBounce => minDistanceBetweenBounce;
+
+        public AudioSource shootAudio;
         
         /// <summary>
         /// Initializes component data and starts MLInput.
@@ -498,9 +500,8 @@ namespace MagicLeap.Examples
             }
 
             ballCounter++;
-            
             ball.transform.position = _controller.gameObject.transform.position;
-
+            shootAudio.PlayOneShot(shootAudio.clip);
 
             Rigidbody rigidBody = ball.GetComponent<Rigidbody>();
             if (rigidBody == null)
@@ -551,6 +552,16 @@ namespace MagicLeap.Examples
         {
             _visualBounds.SetActive(_bounded);
             _meshingSubsystemComponent.gameObject.transform.localScale = _bounded ? _boundedExtentsSize : _boundlessExtentsSize;
+            
+            var extent = _bounded ? _boundedExtentsSize : _boundlessExtentsSize;
+            if (bouncyBall != null)
+            {
+                if (bouncyBall.transform.position.x > extent.x || bouncyBall.transform.position.y > extent.y ||
+                    bouncyBall.transform.position.z > extent.z)
+                {
+                    ResetBall();
+                }
+            }
         }
     }
 }
