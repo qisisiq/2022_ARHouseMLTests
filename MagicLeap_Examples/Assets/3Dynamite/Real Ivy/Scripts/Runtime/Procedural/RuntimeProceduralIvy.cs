@@ -14,7 +14,7 @@ namespace Dynamite3D.RealIvy
 			rtIvyGrowth.Init(rtIvyContainer, ivyParameters, gameObject, leavesMeshesByChosenLeaf, 
 				GetMaxNumPoints(), GetMaxNumLeaves(), GetMaxNumVerticesPerLeaf());
 
-			for (int i = 0; i < 3; i++)
+			for (int i = 0; i < 10; i++)
 			{
 				rtIvyGrowth.Step();
 			}
@@ -56,7 +56,7 @@ namespace Dynamite3D.RealIvy
 			float timePerPoint = ivyParameters.stepSize / growthParameters.growthSpeed;
 			int res = Mathf.CeilToInt(growthParameters.lifetime / timePerPoint) * ivyParameters.maxBranchs * 2;
 
-			res = 20;
+			res = 5;
 
 			return res;
 		}

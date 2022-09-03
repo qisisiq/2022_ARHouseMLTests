@@ -17,7 +17,7 @@ MonoBehaviour:
     stepSize: 0.07
     randomSeed: 0
     branchProvability: 0.15
-    maxBranchs: 20
+    maxBranchs: 5
     layerMask:
       serializedVersion: 2
       m_Bits: 55
