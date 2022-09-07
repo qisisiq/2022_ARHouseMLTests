@@ -86,7 +86,7 @@ namespace MagicLeap.Examples
 
         private List<GameObject> ballPool = new List<GameObject>();
         private int ballCounter = 0;
-        private int ballPoolSize = 30;
+        private int ballPoolSize = 3;
         
         private Camera _camera = null;
 
